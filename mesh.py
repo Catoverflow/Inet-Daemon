@@ -7,8 +7,6 @@ import argparse
 parser = argparse.ArgumentParser(description='Mesh subnet controller')
 parser.add_argument('command',type=str,default='status')
 
-
-
 def status(path='./config.yml'):
     try:
         f = open(path, encoding='UTF-8')
