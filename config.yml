@@ -3,7 +3,9 @@
   WGpubkey: RRAK2ztbMxrjU8XmdHMyfdTUIGprvecnzw7w47x4Ti4=
   WANaddr: 114.25.1.1
   LANaddr: 10.0.0.1
+  WGport: 53280
 -
   WGpubkey: nZBsvXTXUfy27crkNR266p5qQctOZd8NW3W1nTgAfBo=
   WANaddr: 114.25.1.2
   LANaddr: 10.0.0.2
+  WGport: 53280

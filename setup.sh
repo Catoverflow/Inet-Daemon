@@ -1,0 +1,1 @@
+# setup script for new instance
