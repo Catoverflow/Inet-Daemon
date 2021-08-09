@@ -1,5 +1,9 @@
 Wireguard mesh network auto-configurator
 
+## Requirement
+
+ALL machine in mesh should have WAN ip currently(ipv6 not supported yet, nat-to-server/nat-to-nat is in to-do list)
+
 ## Usage
 
 Create a github repository to store config.yml, and change the value of `git_repo` in tools/confupdate.py accordingly
