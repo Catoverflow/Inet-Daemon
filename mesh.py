@@ -1,5 +1,6 @@
 #!/usr/bin/python
-#command-line interface
+# cli for mesh network
+# todo: connectivity query
 
 from yaml import load
 import argparse

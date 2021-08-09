@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# daemon service
+# daemon service, update config from github repo
 
 import os
 import json
