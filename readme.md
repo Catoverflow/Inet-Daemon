@@ -2,11 +2,13 @@ Wireguard mesh network auto-configurator
 
 ## Requirement
 
-ALL machine in mesh should have WAN ip currently(ipv6 not supported yet, nat-to-server/nat-to-nat is in to-do list)
+ALL machine in mesh should have WAN ip currently (ipv6 not supported yet, nat-to-server/nat-to-nat is in to-do list)
 
 ## Usage
 
-Create a github repository to store config.yml, and change the value of `git_repo` in tools/confupdate.py accordingly
+Create a github repository to store config.yml, and change the value of `git_repo` in `tools/confupdate.py` accordingly
+
+This repo's scripts can be put anywhere you want, while wireguard files should be in /etc/wireguard, and thus daemon and setup script must run as root
 
 ### Add new peer
 
@@ -14,7 +16,7 @@ Create a github repository to store config.yml, and change the value of `git_rep
 
 > setup script under construction
 
-#### Manual configure
+#### Manual configuration
 
 0. Configure envirement
 
@@ -24,11 +26,11 @@ Create a github repository to store config.yml, and change the value of `git_rep
 
     Install wireguard (vary on distros)
 
-1. Generate wg keypair in /etc/wireguard
+1. Generate wg keypair in `/etc/wireguard`
 
     ~~~~bash
     # cd /etc/wireguard
-    # wg genkey | tee server_private_key | wg pubkey > server_public_key
+    # wg genkey | tee privatekey | wg pubkey > publickey
     ~~~~
 
 2. Update github repository
@@ -39,7 +41,7 @@ Create a github repository to store config.yml, and change the value of `git_rep
 
 3. Set crontab in new peer
 
-    Use crontab to start `daemon.py` periodly, which will query github for update and generate new wireguard config
+    Use crontab to start `daemon.py` periodly, which will query github for update and update local wireguard configuration & interface
 
     Recommand interval: 30 mins
 
