@@ -40,7 +40,6 @@ def query_latest_commit():
         return False
 
 def update_config():
-    os.chdir('/etc/mesh')
     return_code = os.popen('git pull -q')
     if return_code != 0:
         return False
