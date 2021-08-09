@@ -14,9 +14,11 @@ Create a github repository to store config.yml, and change the value of `git_rep
 
 0. Configure envirement
 
-    Install dependencies
+    Install python dependencies
 
     `pip install -r requirements.txt`
+
+    Install wireguard (vary on distros)
 
 1. Generate wg keypair in /etc/wireguard
 
@@ -33,7 +35,7 @@ Create a github repository to store config.yml, and change the value of `git_rep
 
 3. Set crontab in new peer
 
-    Use crontab to start daemon.py periodly, which will query github for update and generate new wireguard config
+    Use crontab to start `daemon.py` periodly, which will query github for update and generate new wireguard config
 
     Recommand interval: 30 mins
 
