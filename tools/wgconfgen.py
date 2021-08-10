@@ -2,9 +2,6 @@
 import yaml
 from requests import get
 
-ip_lookup = ['ipv4.icanhazip.com', 'api.ipify.org',
-             'v4.ident.me', 'ipv4bot.whatismyipaddress.com']
-
 
 class Wg_conf(object):
 
@@ -20,6 +17,10 @@ class Wg_conf(object):
             print('Err: load config')
 
     def get_ip(self):
+
+        ip_lookup = ['ipv4.icanhazip.com', 'api.ipify.org',
+                     'v4.ident.me', 'ipv4bot.whatismyipaddress.com']
+
         ip_address = None
         for service in ip_lookup:
             try:
@@ -32,7 +33,7 @@ class Wg_conf(object):
 
     def get_private_key(self, wgpath='/etc/wireguard'):
         try:
-            f = open(f'{wgpath}/privatekey','r')
+            f = open(f'{wgpath}/privatekey', 'r')
             self.privkey = f.read()
         except:
             self.privkey = None
@@ -45,15 +46,15 @@ class Wg_conf(object):
             for peer in ymlconf:
                 if peer['WANaddr'] == self.ip:
                     wgconf['interface'] = {'Address': peer['LANaddr'], 'SaveConfig': 'true',
-                                               'PrivateKey': self.privkey, 'ListenPort': peer['WGport']}
+                                           'PrivateKey': self.privkey, 'ListenPort': peer['WGport']}
                 else:
                     wgconf['peer'].append({'PublicKey': peer['WGpubkey'], 'AllowedIPs': peer['LANaddr'],
-                                               'Endpoint': '{}:{}'.format(peer['WANaddr'], peer['WGport'])})
+                                           'Endpoint': '{}:{}'.format(peer['WANaddr'], peer['WGport'])})
             self.conf = wgconf
         except:
             self.conf = None
 
-    def write(self, wgconf = '/etc/wireguard/wg0.conf'):
+    def write(self, wgconf='/etc/wireguard/wg0.conf'):
         try:
             f = open('/etc/wireguard/wg0.conf', 'w')
             f.write('[Interface]\n')
