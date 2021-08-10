@@ -25,6 +25,7 @@ def query_latest_commit():
         content = jsload(r.content)
         commit_time = content[0]['commit']['committer']['date']
     except:
+        print('Err: get commit')
         return None
     # both is set to UTC +0
     commit_time = datetime.strptime(commit_time, '%Y-%m-%dT%H:%M:%SZ')
@@ -41,6 +42,7 @@ def update_config():
     if return_code != 0:
         return False
     else:
+        print('Err: git pull')
         return True
 
 
