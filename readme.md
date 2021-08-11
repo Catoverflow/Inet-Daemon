@@ -70,8 +70,35 @@ This repo's scripts can be put anywhere you want, while wireguard files should b
 
     > `daemon.py` under construction
 
+5. Enable IP forwarding and set firewall rules
+
+    Set `net.ipv4.ip_forward=1` in /etc/sysctl.conf
+
+    To aviod restarting server,
+
+    ~~~~bash
+    # sysctl -p
+    # echo 1 > /proc/sys/net/ipv4/ip_forward
+    ~~~~
+
+    Allow VPN traffic
+
+    ~~~~bash
+    # iptables -A INPUT -p udp -m udp --dport $YOUR_WG_LISTEN_PORT -m conntrack --ctstate NEW -j ACCEPT
+    ~~~~
+
+    To save iptables after rebooting, use `netfilter-persistent`
+
+    ~~~~bash
+    # apt install iptables-persistent
+    # systemctl enable netfilter-persistent
+    # netfilter-persistent save
+    ~~~~
+
 ### Check mesh status
 
 `mesh.py` is the cli for this
 
 > `mesh.py` under construction
+
+> ref: [Wireguard VPN: Typical Setup](https://www.ckn.io/blog/2017/11/14/wireguard-vpn-typical-setup/)
