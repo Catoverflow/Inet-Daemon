@@ -14,9 +14,14 @@ from datetime import datetime
 
 # rewrite needed
 interval = 30  # commits in interval seconds will be ignored
+local_repo = ''
 
 def update_conf():
     try:
+        f = open('meshconf.yml', 'r')
+        data = ymload(f, Loader=SafeLoader)
+        git_repo = data['github repo']
+        local_repo = data['local repo']
         url = f'https://api.github.com/repos/{git_repo}/commits'
         r = get(url=url, headers={
             'Accept': 'application/vnd.github.v3+json'}, params={'pQer_page': 1}, timeout=20)
@@ -25,10 +30,6 @@ def update_conf():
         commit_time = content[0]['commit']['committer']['date']
         commit_time = datetime.strptime(commit_time, '%Y-%m-%dT%H:%M:%SZ')
 
-        f = open('meshconf.yml', 'r')
-        data = ymload(f, Loader=SafeLoader)
-        git_repo = data['github repo']
-        local_repo = data['local repo']
         if 'last update' in data:
             last_update_time = data['last update']
             delta = (last_update_time-commit_time).total_seconds()
@@ -50,11 +51,13 @@ def update_conf():
             chdir(cwd)
             f = open('meshconf.yml', 'w')
             data = dump({'github repo':git_repo,'local repo':local_repo,'last update':datetime.strftime(commit_time, '%Y-%m-%d %H:%M:%S')})
+            f.write(data)
+            f.close()
             print('Config updated')
             return True
 
 
 if __name__ == '__main__':
     if update_conf() == True:
-        wgc = Wg_conf()
-        wgc.write()
+        wgc = Wg_conf(f'{local_repo}/config.yml')
+        wgc.write() 

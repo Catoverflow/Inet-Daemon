@@ -5,7 +5,9 @@ from requests import get
 
 class Wg_conf(object):
 
-    def __init__(self, path='./config.yml'):
+    def __init__(self, confpath, wgpath='/etc/wireguard'):
+        self.wgpath = wgpath
+        self.confpath = confpath
         self.get_ip()
         self.get_private_key()
         self.conf_gen()
@@ -31,16 +33,17 @@ class Wg_conf(object):
                 pass
         self.ip = ip_address
 
-    def get_private_key(self, wgpath='/etc/wireguard'):
+    def get_private_key(self):
         try:
-            f = open(f'{wgpath}/privatekey', 'r')
+            f = open(f'{self.wgpath}/privatekey', 'r')
             self.privkey = f.read()
+            f.close()
         except:
             self.privkey = None
 
-    def conf_gen(self, path='./config.yml'):
+    def conf_gen(self):
         try:
-            ymlconf = yaml.load(open(path, 'r'), Loader=yaml.SafeLoader)
+            ymlconf = yaml.load(open(self.confpath, 'r'), Loader=yaml.SafeLoader)
             wgconf = {}
             wgconf['Peer'] = []
             for peer in ymlconf:
@@ -59,7 +62,7 @@ class Wg_conf(object):
             f = open('/etc/wireguard/wg0.conf', 'w')
             f.write('[Interface]\n')
             for key in self.conf['interface']:
-                f.write('{} = {}\n'.format(key, self.conf['Interface'][key]))
+                f.write('{} = {}\n'.format(key, self.conf['interface'][key]))
             for peer in self.conf['peer']:
                 f.write('\n[Peer]\n')
                 for key in peer:
