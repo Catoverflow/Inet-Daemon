@@ -36,7 +36,7 @@ class Wg_conf(object):
     def get_private_key(self):
         try:
             f = open(f'{self.wgpath}/privatekey', 'r')
-            self.privkey = f.read()
+            self.privkey = f.read().strip()
             f.close()
         except:
             self.privkey = None
@@ -45,7 +45,7 @@ class Wg_conf(object):
         try:
             ymlconf = yaml.load(open(self.confpath, 'r'), Loader=yaml.SafeLoader)
             wgconf = {}
-            wgconf['Peer'] = []
+            wgconf['peer'] = []
             for peer in ymlconf:
                 if peer['WANaddr'] == self.ip:
                     wgconf['interface'] = {'Address': peer['LANaddr'], 'SaveConfig': 'true',

@@ -13,14 +13,14 @@ from requests import get
 from datetime import datetime
 
 # rewrite needed
-interval = 30  # commits in interval seconds will be ignored
-local_repo = ''
+interval = 0  # commits in interval seconds will be ignored
 
 def update_conf():
     try:
         f = open('meshconf.yml', 'r')
         data = ymload(f, Loader=SafeLoader)
         git_repo = data['github repo']
+        global local_repo
         local_repo = data['local repo']
         url = f'https://api.github.com/repos/{git_repo}/commits'
         r = get(url=url, headers={
@@ -50,7 +50,7 @@ def update_conf():
         else:
             chdir(cwd)
             f = open('meshconf.yml', 'w')
-            data = dump({'github repo':git_repo,'local repo':local_repo,'last update':datetime.strftime(commit_time, '%Y-%m-%d %H:%M:%S')})
+            data = dump({'github repo':git_repo,'local repo':local_repo,'last update': commit_time})
             f.write(data)
             f.close()
             print('Config updated')
