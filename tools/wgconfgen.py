@@ -43,13 +43,16 @@ class Wg_conf(object):
 
     def conf_gen(self):
         try:
-            ymlconf = yaml.load(open(self.confpath, 'r'), Loader=yaml.SafeLoader)
+            ymlconf = yaml.load(open(self.confpath, 'r'),
+                                Loader=yaml.SafeLoader)
             wgconf = {}
             wgconf['peer'] = []
             for peer in ymlconf:
                 if peer['WANaddr'] == self.ip:
                     wgconf['interface'] = {'Address': peer['LANaddr'], 'SaveConfig': 'true',
-                                           'PrivateKey': self.privkey, 'ListenPort': peer['WGport']}
+                                           'PrivateKey': self.privkey, 'ListenPort': peer['WGport'],
+                                           'PostUp': 'iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE',
+                                           'PostDown': 'iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE'}
                 else:
                     wgconf['peer'].append({'PublicKey': peer['WGpubkey'], 'AllowedIPs': peer['LANaddr'],
                                            'Endpoint': '{}:{}'.format(peer['WANaddr'], peer['WGport'])})

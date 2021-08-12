@@ -60,7 +60,7 @@ This repo's scripts can be put anywhere you want, while wireguard files should b
 
     Add the new peer's `wg publickey`/`LAN address`/`WAN address` to `config.yml` in `$LOCAL_POS`
 
-    Push to remote
+    Push to remote so other peers that share this repository will auto-update
 
 4. Set crontab in new peer
 
@@ -70,7 +70,7 @@ This repo's scripts can be put anywhere you want, while wireguard files should b
 
     > `daemon.py` under construction
 
-5. Enable IP forwarding and set firewall rules
+5. Enable IP forwarding
 
     Set `net.ipv4.ip_forward=1` in /etc/sysctl.conf
 
@@ -81,18 +81,11 @@ This repo's scripts can be put anywhere you want, while wireguard files should b
     # echo 1 > /proc/sys/net/ipv4/ip_forward
     ~~~~
 
-    Allow VPN traffic
+6. Start wireguard
 
     ~~~~bash
-    # iptables -A INPUT -p udp -m udp --dport $YOUR_WG_LISTEN_PORT -m conntrack --ctstate NEW -j ACCEPT
-    ~~~~
-
-    To save iptables after rebooting, use `netfilter-persistent`
-
-    ~~~~bash
-    # apt install iptables-persistent
-    # systemctl enable netfilter-persistent
-    # netfilter-persistent save
+    # wg-quick up wg0
+    # systemctl enable wg-quick@wg0.service
     ~~~~
 
 ### Check mesh status
