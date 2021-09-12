@@ -8,7 +8,7 @@ Wireguard only used as inet-tunnel creator, ip route is handled by babled.
 
 Established tunnels MUST be an strongly connected directed graph
 
-##Steps
+## Steps
 
 1. Add new device to config.yml (refer to config example.yml)
 
