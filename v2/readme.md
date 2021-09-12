@@ -1,6 +1,6 @@
-#Inet Daemon Version 2
+# Inet Daemon Version 2
 
-##Details
+## Details
 
 Running babeld over established wireguard tunnels.
 
