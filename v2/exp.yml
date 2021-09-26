@@ -1,0 +1,20 @@
+device:
+  vintage:
+    inetIP: 10.4.0.1
+    destIP: 192.168.1.223
+    publickey: 3JUTiaBKGpYGPpQXGHui95Zbi4yfm/GQJC7ECB7d/VQ=
+
+  ibugtql:
+    inetIP: 10.4.0.2
+    destIP: 192.168.1.224
+    publickey: DWVBxMZwI17+OWqRNH8fYQcU8sJQautXUpIokEhPxhc=
+
+  self:
+    inetIP: 10.4.0.3
+    destIP: 192.168.1.6
+    publickey: mHzgylWe/4bh+v5Qx9NlRCdVWL9G9WMLPhiXmDpqdF8=
+
+tunnel:
+- [[vintage, 60000, cat.ibugtql], [ibugtql, 60000, cat.vintage]]
+- [[self, 60000, cat.ibugtql], [ibugtql, 60001, cat.self]]
+- [[vintage, 60001, cat.self], [self, 60001, cat.vintage]]

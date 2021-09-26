@@ -1,23 +1,45 @@
+from subprocess import run
+
+
 class wireguard(object):
     def __init__(self):
         self.interface = []
-    def run():
-        pass
-    def genconf(self,config,privkey,uuid):
-        config=config['device']
-        wginterface='[Interface]\nListenPort = {}\nPrivateKey = {}\nTable = off\n'\
-            .format(config[uuid]['wireguard']['port'],privkey)
-        for tunnel in config[uuid]['wireguard']['tunnel']:
-            deviceid = tunnel['device']
-            peer='[Peer]\nPublicKey = {}\nAllowedIPs = {}\nEndpoint = {}:{}'\
-                .format(config[deviceid]['wireguard']['publickey'],config[deviceid]['inetIP'],
-                config[deviceid]['destIP'],config[deviceid]['wireguard']['port'])
-            netint = tunnel['interface']
+
+    def genconf(self, config, privkey, uuid, path='/etc/wireguard'):
+        if not uuid in config['device']:
+            print('No config found, config generation passed')
+            return
+        for tunnel in config['tunnel']:
+            if uuid == tunnel[0][0]:
+                end1, end2 = tunnel
+            elif uuid == tunnel[1][0]:
+                end2, end1 = tunnel
+            else:
+                continue
+            device = config['device']
+            oppid = end2[0]
+            wginterface = '[Interface]\nAddress = {}\nListenPort = {}\nPrivateKey = {}\nTable = off\n'\
+                .format(device[uuid]['inetIP'], end1[1], privkey)
+            hook = 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o {} -j MASQUERADE\n\
+                PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o {} -j MASQUERADE\n'\
+                .format(end1[2], end1[2])
+            peer = '[Peer]\nPublicKey = {}\nAllowedIPs = {}\nEndpoint = {}:{}\n'\
+                .format(device[oppid]['publickey'], device[oppid]['inetIP'],
+                        device[oppid]['destIP'], end2[1])
+            netint = end1[2]
             self.interface.append(netint)
-            fout = open(f'{netint}.conf','w')
-            fout.write(wginterface)
-            fout.write(peer)
+            fout = open(f'{path}/{netint}.conf', 'w')
+            fout.write(wginterface+hook+peer)
             fout.close()
 
-if __name__ == '__main__':
-    wireguard.genconf()
+    def up(self):
+        for netint in self.interface:
+            run(['wg-quick', 'up', f'{netint}'])
+        if len(self.interface) == 0:
+            print("No interface configured, interface set up passed")
+
+    def down(self):
+        for netint in self.interface:
+            run(['wg-quick', 'down', f'{netint}'])
+        if len(self.interface) == 0:
+            print("No interface configured, interface set down passed")

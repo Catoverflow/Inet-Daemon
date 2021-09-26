@@ -1,47 +1,38 @@
 # Inet Daemon Version 2
 
+## Dependencies
+
+python3 wireguard-tools bird
 ## Details
 
-Running babeld over established wireguard tunnels.
-
-Wireguard only used as inet-tunnel creator, ip route is handled by babled.
-
-Established tunnels MUST be an strongly connected directed graph
-
+Set up WireGuard tunnel as basis of OSPF overlay.
 ## Steps
 
-1. Add new device to config.yml (refer to config example.yml)
+1. Get keypair for this device
 
-The config should be placed in github repo's root directory
+    Add the public key to remote config
 
-2. Run `init ${github repo}`
+2. Run `python setup.py ${github repo} $(this_device_uuid) $(wireguard_privatekey_in_string)`
 
     Details:
 
     1. Config will be fetched to local
 
-    2. Wireguard configuration will be generated according to the config
+    2. Setup WireGuard interface according to the config
 
-    3. Wireguard interface set up
-
-    4. Babled runs and generates routing rules
+    3. Bird runs OSPF and generates routing rules
 
 3. Add daemon to crontab
 
-    DetailsL
+    Detailss:
 
-    1. Daemon will run periodly
+    1. Daemon will run periodly to download and renew config
 
-    2. Daemon call github REST API to check the config repo's update status
+    2. WireGuard tunnel and bird OSPF will update accordingly
 
-    3. If repo updates, new config will be pulled
+4. Add new device to config (refer to config example.yml)
 
-    4. Wireguard interface will be updated
-
-    5. Babled will run and update routing rules accordingly
-
+The config should be placed in github repo's root directory
 ## Todos
 
-- Add internet access routing support
-
-- Add babelWeb (optional)
+- Add internet access routing support (edge AS routing)
