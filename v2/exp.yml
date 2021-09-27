@@ -12,9 +12,12 @@ device:
   self:
     inetIP: 10.4.0.3
     destIP: 192.168.1.6
-    publickey: mHzgylWe/4bh+v5Qx9NlRCdVWL9G9WMLPhiXmDpqdF8=
+    publickey: LO+LSAd/B8CNt51YhCuP9Xj/VGMEzJLtvqXQkfplpw0=
 
 tunnel:
+# point-to-point
+# - [[point A], [point B]]
+# pointA = [device A, wireguard listen port, wireguard interface name]
 - [[vintage, 60000, cat.ibugtql], [ibugtql, 60000, cat.vintage]]
 - [[self, 60000, cat.ibugtql], [ibugtql, 60001, cat.self]]
 - [[vintage, 60001, cat.self], [self, 60001, cat.vintage]]
