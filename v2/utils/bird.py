@@ -1,0 +1,2 @@
+class bird(object):
+    pass

@@ -20,12 +20,17 @@ class wireguard(object):
             oppid = end2[0]
             wginterface = '[Interface]\nAddress = {}\nListenPort = {}\nPrivateKey = {}\nTable = off\n'\
                 .format(device[uuid]['inetIP'], end1[1], privkey)
-            hook = "PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o {} -j MASQUERADE\n\
-PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o {} -j MASQUERADE\n"\
-                .format(end1[2], end1[2])
+            hook = "\
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o %i -j MASQUERADE\n\
+PostUp = ip addr add {} peer {} dev %i\n\
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o %i -j MASQUERADE\n"\
+                .format(device[uuid]['inetIP'],device[oppid]['inetIP'])
             peer = '[Peer]\nPublicKey = {}\nAllowedIPs = {}\nEndpoint = {}:{}\n'\
-                .format(device[oppid]['publickey'], device[oppid]['inetIP'],
+                .format(device[oppid]['publickey'], '0.0.0.0/0',
                         device[oppid]['destIP'], end2[1])
+            # wireguard will drop packages with destination ip not match allowip, and also use allowip to route
+            # we need wireguard accept relay packages, in this case we can set allowip to full subnet or 0.0.0.0
+            # and add iptable manually
             netint = end1[2]
             self.interface.append(netint)
             fout = open(f'{path}/{netint}.conf', 'w')
