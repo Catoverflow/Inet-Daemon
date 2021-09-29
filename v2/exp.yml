@@ -1,4 +1,10 @@
 device:
+# device uuid:
+  # InetIP: wireguard subnet ip
+  # destIP: Internet accessible ip
+  # publickey: wireguard publickey
+# Be ware that you should store wireguard private key elsewhere,
+# which will be used as setup script params
   vintage:
     inetIP: 10.4.0.1
     destIP: 192.168.1.223
@@ -16,8 +22,8 @@ device:
 
 tunnel:
 # point-to-point
-# - [[point A], [point B]]
-# pointA = [device A, wireguard listen port, wireguard interface name]
-- [[vintage, 60000, cat.ibugtql], [ibugtql, 60000, cat.vintage]]
-- [[self, 60000, cat.ibugtql], [ibugtql, 60001, cat.self]]
-- [[vintage, 60001, cat.self], [self, 60001, cat.vintage]]
+# - [[point A], [point B], OSPF cost]
+# point = [device uuid, wireguard listen port, connected interface name]
+- [[vintage, 60000, cat.ibugtql], [ibugtql, 60000, cat.vintage], 100]
+- [[self, 60000, cat.ibugtql], [ibugtql, 60001, cat.self], 100]
+- [[vintage, 60001, cat.self], [self, 60001, cat.vintage], 100]
