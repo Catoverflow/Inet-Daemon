@@ -23,7 +23,7 @@ class Config(object):
         conf = get(url).text
         conf = load(conf, Loader=SafeLoader)
         self.tunnel = self.Tunnel(conf['tunnel']).filter(uuid)
-        self.device = self.Device(conf['device'])
+        self.device = self.Device(conf['device']).devices
         self.hash = hash(dump(conf))
         self.uuid = uuid
     
@@ -31,7 +31,7 @@ class Config(object):
         fout = open('.cache', 'w')
         cache = ''
         interface = ''
-        cache += self.hash
+        cache += str(self.hash)
         for tun in self.tunnel:
             interface += (' '+tun[0][2])
         cache += interface
