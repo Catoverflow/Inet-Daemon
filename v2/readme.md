@@ -2,15 +2,18 @@
 
 ## Dependencies
 
-python3 wireguard-tools bird
+`python3` `wireguard-tools` `bird`
+
+And python packages in `requirements.txt`
+
 ## Details
 
-Set up WireGuard tunnel as basis of OSPF overlay.
+Set up WireGuard tunnel as basis of OSPF, maintaining a dynamic configurable Mesh network.
 ## Steps
 
 1. Get keypair for this device
 
-    Add the public key to remote config
+    Add the public key and device info (if new) to remote config (refer to exp.yml)
 
 2. Run `python setup.py ${github repo} $(this_device_uuid) $(wireguard_privatekey_in_string)`
 
@@ -29,8 +32,6 @@ Set up WireGuard tunnel as basis of OSPF overlay.
     1. Daemon will run periodly to download and renew config
 
     2. WireGuard tunnel and bird OSPF will update accordingly
-
-4. Add new device to config (refer to config example.yml)
 
 The config should be placed in github repo's root directory
 ## Todos
